@@ -7,22 +7,26 @@ option go_package = "iotpb";
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 
-message DeviceRequest {
-    string device_id = 1 [(gogoproto.customname) = "DeviceID"];
+message DeviceID {
+    string id = 1 [(gogoproto.customname) = "ID"];
 }
 
 message DeviceSchema {
-    string device_id = 1 [(gogoproto.customname) = "DeviceID"];
     map<string, string> schema = 2;
 }
 
 message DeviceState {
+    map<string, google.protobuf.Any> state = 2;
+}
+
+message DeviceStateUpdate {
     string device_id = 1 [(gogoproto.customname) = "DeviceID"];
     map<string, google.protobuf.Any> state = 2;
 }
 
 service DevicesService {
-    rpc GetSchema (DeviceRequest) returns (DeviceSchema);
-    rpc GetState (DeviceRequest) returns (DeviceState);
-    rpc SetState (DeviceState) returns (DeviceState);
+    rpc GetSchema (DeviceID) returns (DeviceSchema);
+
+    rpc GetState (DeviceID) returns (DeviceState);
+    rpc SetState (DeviceStateUpdate) returns (DeviceState);
 }
