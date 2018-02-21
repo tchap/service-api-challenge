@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package iot;
+
+option go_package = "iotpb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+
+message SwitchState {
+    enum ReasonForSetting {
+        INIT = 0;
+        BUTTON = 1;
+        RADIO = 2;
+        TIMER = 3;
+        CURRENT_FUSE = 4;
+    }
+
+    bool state = 1;
+    ReasonForSetting state_reason = 2; 
+    bool initial_state = 3;
+
+    uint32 timer_value = 4;
+    uint32 initial_timer_value = 5;
+
+    bool error_detected = 6;
+}
+
+message SwitchStateUpdate {
+    google.protobuf.BoolValue state = 1;
+    google.protobuf.BoolValue initial_state = 2;
+
+    google.protobuf.UInt32Value timer_value = 3;
+    google.protobuf.UInt32Value initial_timer_value = 4;
+}
