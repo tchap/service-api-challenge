@@ -56,4 +56,6 @@ service DevicesAPI {
     rpc SetState (DeviceStateUpdate) returns (DeviceState);
 
     rpc GetData (DataRequest) returns (stream DataPacket);
+
+    rpc MonitorDevice (DeviceID) returns (stream DeviceEvent);
 }
