@@ -6,6 +6,7 @@ option go_package = "pb";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
 
 import "github.com/tchap/service-api-challenge/grpc/pb/data.proto";
 
@@ -13,17 +14,25 @@ message DeviceID {
     string id = 1 [(gogoproto.customname) = "ID"];
 }
 
+enum DeviceModel {
+    SOCKET_OUTLET = 0;
+}
+
 message DeviceSchema {
     // DeviceID contains the associated unique device ID.
     string device_id = 1 [(gogoproto.customname) = "DeviceID"];
 
+    // DeviceModel contains the device model,
+    // which can be used to easily identify what kind of hardware device this is.
+    DeviceModel device_model = 2;
+
     // StateSchema describes the device state object.
-    // It maps state object keys to type URLs.
-    map<string, string> state_schema = 2;
+    // It maps state object keys to type names.
+    map<string, string> state_schema = 3;
 
     // DataSchema describes data packets emitted by the device.
     // It maps data types to their associated cardinality.
-    map<DataType, uint32> data_schema = 3;
+    map<DataType, uint32> data_schema = 4;
 }
 
 message DeviceState {
@@ -35,9 +44,16 @@ message DeviceStateUpdate {
     map<string, google.protobuf.Any> state = 2;
 }
 
+message DataRequest {
+    google.protobuf.Timestamp from = 1;
+    google.protobuf.Timestamp to = 2;
+}
+
 service DevicesAPI {
-    rpc GetDevice (DeviceID) returns (Device);
+    rpc GetSchema (DeviceID) returns (DeviceSchema);
 
     rpc GetState (DeviceID) returns (DeviceState);
     rpc SetState (DeviceStateUpdate) returns (DeviceState);
+
+    rpc GetData (DataRequest) returns (stream DataPacket);
 }

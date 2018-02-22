@@ -1,29 +1,25 @@
 syntax = "proto3";
 
-package iot;
+package pb;
 
-option go_package = "iotpb";
+option go_package = "pb";
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-import "google/protobuf/any.proto";
+import "google/protobuf/wrappers.proto";
 
 message SwitchState {
     enum ReasonForSetting {
-        INIT = 0;
-        BUTTON = 1;
-        RADIO = 2;
-        TIMER = 3;
+        INIT         = 0;
+        BUTTON       = 1;
+        RADIO        = 2;
+        TIMER        = 3;
         CURRENT_FUSE = 4;
     }
 
     bool state = 1;
     ReasonForSetting state_reason = 2; 
     bool initial_state = 3;
-
-    uint32 timer_value = 4;
-    uint32 initial_timer_value = 5;
-
-    bool error_detected = 6;
+    
+    bool hardware_error_detected = 4;
 }
 
 message SwitchStateUpdate {

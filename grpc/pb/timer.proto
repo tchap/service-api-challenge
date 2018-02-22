@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "pb";
+
+import "google/protobuf/wrappers.proto";
+
+message TimerState {
+    uint32 value = 1;
+    uint32 initial_value = 2;
+}
+
+message TimerStateUpdate {
+    google.protobuf.UInt32Value value = 1;
+    google.protobuf.UInt32Value initial_value = 2;
+}

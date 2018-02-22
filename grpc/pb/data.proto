@@ -24,12 +24,8 @@ message IntegerValues {
     repeated int32 values = 1;
 }
 
-// Measurement is a container holding N values along with the associated data type.
-message Measurement {
-    // DataType is the associated data type.
-    DataType data_type = 1;
-
-    // Values contains the N values, which can be binary, floats or integers.
+// Tuple is a container holding N values of the same type.
+message Tuple {
     oneof values {
         FloatValues   floats   = 2;
         IntegerValues integers = 3;
@@ -41,6 +37,6 @@ message DataPacket {
     // Timestamp contains the measurement timestamp.
     google.protobuf.Timestamp timestamp = 1;
 
-    // Measurements contain the data points themselves.
-    repeated Measurement measurements = 2;
+    // Data contain the data points themselves.
+    map<DataType, Tuple> data = 2;
 }
