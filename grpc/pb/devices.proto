@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "pb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+
+import "github.com/tchap/service-api-challenge/grpc/pb/data.proto";
+
+message DeviceID {
+    string id = 1 [(gogoproto.customname) = "ID"];
+}
+
+message DeviceSchema {
+    // DeviceID contains the associated unique device ID.
+    string device_id = 1 [(gogoproto.customname) = "DeviceID"];
+
+    // StateSchema describes the device state object.
+    // It maps state object keys to type URLs.
+    map<string, string> state_schema = 2;
+
+    // DataSchema describes data packets emitted by the device.
+    // It maps data types to their associated cardinality.
+    map<DataType, uint32> data_schema = 3;
+}
+
+message DeviceState {
+    map<string, google.protobuf.Any> state = 1;
+}
+
+message DeviceStateUpdate {
+    string device_id = 1 [(gogoproto.customname) = "DeviceID"];
+    map<string, google.protobuf.Any> state = 2;
+}
+
+service DevicesAPI {
+    rpc GetDevice (DeviceID) returns (Device);
+
+    rpc GetState (DeviceID) returns (DeviceState);
+    rpc SetState (DeviceStateUpdate) returns (DeviceState);
+}

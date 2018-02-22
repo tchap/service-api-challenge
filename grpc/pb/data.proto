@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "pb";
+
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
+
+// DataType represents a measurement data type.
+enum DataType {
+    ELECTRIC_POWER    = 0; // [W] - Watts
+    RELATIVE_HUMIDITY = 1; // [ppm]
+    CO2_CONCENTRATION = 2; // [%]
+}
+
+// FloatValues is a container for N floating-point values.
+message FloatValues {
+    repeated float values = 1;
+}
+
+// IntegerValues is a container for N integer values.
+message IntegerValues {
+    repeated int32 values = 1;
+}
+
+// Measurement is a container holding N values along with the associated data type.
+message Measurement {
+    // DataType is the associated data type.
+    DataType data_type = 1;
+
+    // Values contains the N values, which can be binary, floats or integers.
+    oneof values {
+        FloatValues   floats   = 2;
+        IntegerValues integers = 3;
+    }
+}
+
+// DataPacket represents a data packet emitted by a device.
+message DataPacket {
+    // Timestamp contains the measurement timestamp.
+    google.protobuf.Timestamp timestamp = 1;
+
+    // Measurements contain the data points themselves.
+    repeated Measurement measurements = 2;
+}
